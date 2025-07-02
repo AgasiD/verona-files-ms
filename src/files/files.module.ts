@@ -10,5 +10,6 @@ import { DriveService } from './services/drive/drive.service';
   controllers: [FilesController],
   providers: [FilesService, AuthDriveService, DriveService],
   imports: [NatsModule]
+  
 })
 export class FilesModule {}
