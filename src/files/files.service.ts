@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { DriveService } from './services/drive/drive.service';
 import { Readable } from 'stream';
 import { obtenerBackup } from './jobs/backup.job';
+import { envs } from 'src/config/envs';
 
 enum FolderType {
     IMAGES_PEDIDOS = 0,
@@ -31,7 +32,7 @@ export class FilesService {
 
         let rawdata = fs.readFileSync(path_esquema);
         const carpetas = JSON.parse(rawdata);
-        let idRaizObra = await this.agregarCarpeta(nombre, process.env.ROOT_FOLDER);
+        let idRaizObra = await this.agregarCarpeta(nombre, envs.root_folder);
         for (let carpeta of carpetas) {
             let idCarpeta = await this.agregarCarpeta(carpeta.nombre, idRaizObra!);
             carpeta.subcarpetas.forEach(async subcarpeta => {

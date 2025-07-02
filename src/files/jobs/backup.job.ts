@@ -1,10 +1,7 @@
 import { RpcException } from "@nestjs/microservices";
 import axios from "axios";
-import path from "path";
 import { getFullDate } from "src/common/helpers/helper";
 import { envs } from "src/config/envs";
-import { ClientProxy } from '@nestjs/microservices';
-import { firstValueFrom } from "rxjs";
 import { DriveService } from "../services/drive/drive.service";
 import { Readable } from "stream";
 
@@ -13,7 +10,7 @@ export const obtenerBackup = async (driveService: DriveService, rootBackupFolder
     const days = ['DOMINGO', 'LUNES', 'MARTES', 'MIERCOLES', 'JUEVES', 'VIERNES', 'SABADO']
     const day = new Date().getDay();
     try {
-        const url = `${process.env.GOOGLE_URI}/.json`
+        const url = `${envs.googleURI}/.json`
         console.log('Recuperando base de datos...');
 
         let response = await axios.get(url);
