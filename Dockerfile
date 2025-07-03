@@ -6,7 +6,7 @@ WORKDIR /app
 COPY package*.json ./
 COPY tsconfig.json ./
 COPY src ./src
-COPY .env .env
+# COPY .env .env
 
 RUN npm install
 RUN npm run build
@@ -17,7 +17,7 @@ WORKDIR /app
 
 # Copiamos solo lo necesario para correr la app
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /app/.env ./env
+# COPY --from=builder /app/.env ./env
 COPY package*.json ./
 
 RUN npm install --only=production
