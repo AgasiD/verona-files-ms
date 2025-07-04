@@ -1,6 +1,5 @@
 import { RpcException } from "@nestjs/microservices";
 const fs = require('fs').promises;
-var jwt = require('jsonwebtoken');
 
 
 
