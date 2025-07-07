@@ -54,8 +54,8 @@ export class AuthDriveService {
 
   private async loadOrCreateToken(oAuth2Client: any): Promise<any> {
     try {
-      const tokenJson = await fs.readFile(this.TOKEN_PATH, 'utf8');
-      return JSON.parse(tokenJson);
+      const token = await this.leerToken();
+      return token;
     } catch (err) {
       this.logger.warn('Archivo de token no encontrado, generando uno nuevo...');
 
@@ -113,8 +113,23 @@ export class AuthDriveService {
     }
 
     return credentials;
+  }
 
+  private async leerToken() {
+    let token;
+    switch (envs.setCredentialsWay) {
+      case 'file':
+        token = await JSON.parse(await fs.readFile(this.TOKEN_PATH, 'utf8'));
+        break;
+      case 'env':
+        token = await JSON.parse(envs.googleTokenCreedentials);
+        break
+    }
+    if (!token) {
+      this.logger.error('No se encontraron credenciales de Google Drive');
+      throw new UnauthorizedException('No se encontraron credenciales de Google Drive');
+    }
 
-
+    return token;
   }
 }
