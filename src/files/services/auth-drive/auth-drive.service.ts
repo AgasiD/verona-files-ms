@@ -95,13 +95,17 @@ export class AuthDriveService {
 
   private async leerCredentials() {
     let credentials;
+    console.log('setCredentialsWay', envs.setCredentialsWay)
     switch (envs.setCredentialsWay) {
       case 'file':
         credentials = JSON.parse(await fs.readFile(this.CREDENTIALS_PATH, 'utf8'));
         break;
       case 'env':
         credentials = JSON.parse(envs.googleCredentials);
+        break;
     }
+
+    console.log(credentials)
 
     if (!credentials) {
       this.logger.error('No se encontraron credenciales de Google Drive');
