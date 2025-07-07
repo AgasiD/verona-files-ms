@@ -9,6 +9,10 @@ interface EnvVars {
     SIGN: string,
     ROOT_FOLDER: string,
     NODE_ENV: string,
+    SET_CREDENTIALS_WAY: string; // 'file' or 'env'
+    GOOGLE_CREDENTIALS?: string | null; // JSON string or null
+    
+    
 }
 
 const envsSchema = joi.object({
@@ -18,6 +22,8 @@ const envsSchema = joi.object({
     SIGN: joi.string().required(),
     ROOT_FOLDER: joi.string().required(),
     NODE_ENV: joi.string().required(),
+    SET_CREDENTIALS_WAY: joi.string().valid('file', 'env').default('file'),
+    GOOGLE_CREDENTIALS: joi.string().optional().allow(null),
 }).unknown(true)
 
 const { error, value } = envsSchema.validate({
@@ -38,6 +44,8 @@ export const envs = {
     sign: envVars.SIGN,
     root_folder: envVars.ROOT_FOLDER,
     node_env: envVars.NODE_ENV,
+    setCredentialsWay: process.env.SET_CREDENTIALS_WAY || 'file', // 'file' or 'env'
+    googleCredentials: process.env.GOOGLE_CREDENTIALS ? JSON.parse(process.env.GOOGLE_CREDENTIALS) : null,
     
 }
 

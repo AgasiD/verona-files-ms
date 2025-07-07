@@ -119,7 +119,7 @@ export class DriveService {
 
     async addFileFromStream({stream, parentFolderId, nombre, extension}) {
 
-        parentFolderId = '1PFu2CkSYgfPj-mxW5epIwgTmJ8Ty5UJC';
+        parentFolderId = parentFolderId;
         let auth = await this.driveAuthService.getAuth()
         const drive = google.drive({ version: 'v3', auth });
         const fileMetadata = {

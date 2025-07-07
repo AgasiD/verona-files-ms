@@ -4,6 +4,7 @@ import { getFullDate } from "src/common/helpers/helper";
 import { envs } from "src/config/envs";
 import { DriveService } from "../services/drive/drive.service";
 import { Readable } from "stream";
+import { Logger } from "@nestjs/common";
 
 export const obtenerBackup = async (driveService: DriveService, rootBackupFolder) => {
 
@@ -30,6 +31,7 @@ export const obtenerBackup = async (driveService: DriveService, rootBackupFolder
         return { success: true };
 
     } catch (err) {
+        Logger.error('Error al generar respaldo de la base de datos:', err);
         return {
             success: false,
             message: 'No se pudo generar respaldo de la base de datos. ' + err.message,

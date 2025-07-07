@@ -2,6 +2,7 @@ import { Injectable, UnauthorizedException, Logger } from '@nestjs/common';
 import { google } from 'googleapis';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { envs } from 'src/config/envs';
 
 @Injectable()
 export class AuthDriveService {
@@ -12,9 +13,8 @@ export class AuthDriveService {
   private readonly TOKEN_PATH = path.join(process.cwd(), 'config/token.json');
 
   async getAuth() {
-    if (!this.auth) {
-      await this.initializeAuth();
-    }
+    if (!this.auth) await this.initializeAuth();
+
 
     try {
       // Esto refresca automáticamente el token si es necesario
@@ -27,7 +27,7 @@ export class AuthDriveService {
   }
 
   private async initializeAuth() {
-    const credentials = JSON.parse(await fs.readFile(this.CREDENTIALS_PATH, 'utf8'));
+    const credentials = await this.leerCredentials();
     const { client_secret, client_id, redirect_uris } = credentials.installed;
 
     const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
@@ -91,5 +91,26 @@ export class AuthDriveService {
     } catch (err) {
       this.logger.error('Error al guardar token en archivo', err);
     }
+  }
+
+  private async leerCredentials() {
+    let credentials;
+    switch (envs.setCredentialsWay) {
+      case 'file':
+        credentials = JSON.parse(await fs.readFile(this.CREDENTIALS_PATH, 'utf8'));
+        break;
+      case 'env':
+        credentials = JSON.parse(envs.googleCredentials);
+    }
+
+    if (!credentials) {
+      this.logger.error('No se encontraron credenciales de Google Drive');
+      throw new UnauthorizedException('No se encontraron credenciales de Google Drive');
+    }
+
+    return credentials;
+
+
+
   }
 }
